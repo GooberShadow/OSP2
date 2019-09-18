@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -I. -g
 TARGET = logParse
-OBJS = main.o options.o files.o intList.o
+OBJS = main.o options.o files.o
 .SUFFIXES: .c .o
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)

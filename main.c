@@ -7,7 +7,8 @@ int main(int argc, char** argv)
 	
 	if(getFlagState(HELP) == 1)
 	{
-		printf("HELP");
+		printf("HELP\n");
+		return 0;
 	}
 
 	readInFile();
