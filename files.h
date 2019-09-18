@@ -4,6 +4,8 @@
 #define FILES_H
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 extern int numLists;
 
