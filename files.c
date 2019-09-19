@@ -13,7 +13,48 @@ static FILE* outFile = NULL;
 
 pid_t pid = -1;
 
-bool isSubsetSum(int set[], int n, int sum)
+void displaySubset(int subSet[], int size, int pidNum)
+{
+	int i;
+	//printf("%d: ", pidNum);
+	for(i = 0; i < size; i++)
+	{
+		printf("%d ", subSet[i]);
+	}
+	printf("\n");
+}
+
+void subsetSum(int set[], int *subSet, int n, int subSize, int total, int nodeCount, int sum, int pidNum)
+{
+	if(total == sum)
+	{
+		displaySubset(subSet, subSize, pidNum);
+		subsetSum(set,subSet,n,subSize-1,total-set[nodeCount],nodeCount+1,sum, pidNum);
+		return;
+	}
+	else
+	{
+		int i;
+		subSet = (int*) realloc(subSet, n * sizeof(int));
+		for(i = nodeCount; i < n; i++)
+		{
+			subSet[subSize] = set[i];
+			subsetSum(set,subSet,n,subSize+1,total+set[i],i+1,sum, pidNum);
+		}
+	}
+}
+
+void findSubset(int set[], int size, int sum, int pidNum)
+{
+	//int b=100;
+	int *subSet = NULL;
+	//int *subSet = (int*) malloc(b * sizeof(int));
+	subsetSum(set, subSet, size, 0, 0, 0, sum, pidNum);
+
+	free(subSet);
+}
+
+/*bool isSubsetSum(int set[], int n, int sum)
 {
 	bool subset[n + 1][sum + 1];
 
@@ -46,15 +87,15 @@ bool isSubsetSum(int set[], int n, int sum)
 	}
 
 	//PRINT TABLE
-	/*for(i = 0; i <= n; i++)
+	for(i = 0; i <= n; i++)
 	{
 		for(j = 0; j <= sum; j++)
 		{
 			printf("%4d", subset[i][j]);
 		}
 		printf("\n");
-	}*/
-	
+	}
+*/	
 	//RECURSIVE WAY OF DOING IT
 	/*
 	if(sum == 0)
@@ -75,10 +116,10 @@ bool isSubsetSum(int set[], int n, int sum)
 				isSubsetSum(set, n-1, sum-set[n-1]);
 	*/
 	
-	return subset[n][sum];
-}
+//	return subset[n][sum];
+//}
 
-void setupForIsSubsetSum(char* set)
+void setupForIsSubsetSum(char* set, int pidNum)
 {
 	char* line = NULL;
 	int numInts = 0;
@@ -93,13 +134,13 @@ void setupForIsSubsetSum(char* set)
 	
 	firstWord = strtok_r (inputCopy, delimiter, &context);
 	remainder = context;
-	printf("%s\n", firstWord);
-	printf("%s\n", context);
+	//printf("%s\n", firstWord);
+	//printf("%s\n", context);
 
 	int counter = 1;
 	int sum;
 	sum = atoi(firstWord);
-	printf("SUM IS: %d\n", sum);
+	//printf("SUM IS: %d\n", sum);
 		
 		//Obtain number of words in the string
 		int i;
@@ -114,36 +155,44 @@ void setupForIsSubsetSum(char* set)
 		char*token = strtok(context, " ");
 		while(token != NULL)
 		{
-			printf("%s\n", token);
+			//printf("%s\n", token);
 			array[iterator] = atoi(token);
 			iterator++;
 			token = strtok(NULL, " ");
 		}
 
+
+		
 		//Ready for isSubsetSum function
 		//bool flag = 0;
 		//flag = isSubsetSum(array, counter, sum);
-		if(isSubsetSum(array, counter, sum) == true)
+		
+
+		findSubset(array, counter, sum, pidNum);
+		//ORIGINAL IDEA
+		/*if(isSubsetSum(array, counter, sum) == true)
 		{
 			printf("Found a subset with given sum\n");
 		}
 		else
 		{
 			printf("No subset with given sum\n");
-		}
+		}*/
+
+
 		/*int flag = 0;
 		flag = isSubsetSum(array, counter, sum);
 		printf("HERE IS THE FLAG: -----------------------> %d\n\n", flag);
 		*/
 		
 		//PRINT ARRAY
-		for(i = 0; i < counter; ++i)
+		/*for(i = 0; i < counter; ++i)
 		{
 			printf("ARRAY: %d\n", array[i]);
-		}
+		}*/
 		
 	free(inputCopy);
-	for(i = 0; i < 12000; ++i)
+	/*for(i = 0; i < 12000; ++i)
 	{
 		printf("ope\n");
 	}
@@ -158,8 +207,7 @@ void setupForIsSubsetSum(char* set)
 	for(i = 0; i < 12000; ++i)
 	{
 		printf("ope\n");
-	}
-	printf("THE END\n");
+	}*/
 }
 
 void kill_child(int sig)
@@ -218,32 +266,40 @@ int readInFile()
 	}*/
 
 	int i;
+	int pidNum;
 	for(i = 0; i < numLists; ++i)
 	{
-		signal(SIGALRM,(void (*)(int))kill_child);
-		pid = fork();
-		/*pid_t pid = fork();
-		wait(NULL);*/
+		
+		getline(&line, &len, inFile);
+		//signal(SIGALRM,(void (*)(int))kill_child);
+		//pid = fork();
+		pid_t pid = fork();
 		if(pid > 0)
+		{
+			pidNum = pid;
+			printf("%d: ", pid);
+		}
+		/*if(pid > 0)
 		{
 			alarm(1);
 
 			wait(NULL);
 			getline(&line, &len, inFile);
 			
-		}
+		}*/
 		//printf("This is pid: %d\n", pid);
 		//getline called by parent to move the file pointer
-		/*getline(&line, &len, inFile);*/
 		//This is the child 
 		else if(pid == 0)
 		{
-			getline(&line, &len, inFile);
-			setupForIsSubsetSum(line);
+			//getline(&line, &len, inFile);
+			setupForIsSubsetSum(line, pidNum);
 			//printf("%s", line);
 			//printf("I am child and I run the alg\n");
 			exit(0);
 		}
+		
+		wait(NULL);
 	}
 	printf("\n");
 
