@@ -5,6 +5,19 @@
 #include "files.h"
 #include "options.h"
 
+#define TIME_LIMIT 1
+
+void alarm_handler(int);
+void child_handler(int);
+
+void listenForAlarm(int signal)
+{
+	printf("No valid subset found after 1 second ");
+	exit(0);
+}
+
+int timeout = 0;
+int child_done = 0;
 
 int numLists = 0;
 
@@ -200,6 +213,7 @@ void setupForIsSubsetSum(char* set, int pidNum)
 		}*/
 		
 	free(inputCopy);
+	//TESTING FOR LOOPS FOR TIMEOUT
 	/*for(i = 0; i < 12000; ++i)
 	{
 		printf("ope\n");
@@ -215,7 +229,77 @@ void setupForIsSubsetSum(char* set, int pidNum)
 	for(i = 0; i < 12000; ++i)
 	{
 		printf("ope\n");
-	}*/
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	for(i = 0; i < 12000; ++i)
+	{
+		printf("ope\n");
+	}
+	printf("THE END\n");
+	*/
 }
 
 void kill_child(int sig)
@@ -282,6 +366,12 @@ int readInFile()
 		//signal(SIGALRM,(void (*)(int))kill_child);
 		//pid = fork();
 		pid_t pid = fork();
+		if(pid < 0)
+		{
+			perror("Fork failed");
+			exit(1);
+		}
+
 		if(pid > 0)
 		{
 			pidNum = pid;
@@ -300,13 +390,47 @@ int readInFile()
 		//This is the child 
 		else if(pid == 0)
 		{
+			//CHILD Process
+			//TESTING FOR ALARM BELOW
+			alarm(1);
+			signal(SIGALRM, listenForAlarm);
+			
 			//getline(&line, &len, inFile);
 			setupForIsSubsetSum(line, pidNum);
 			//printf("%s", line);
 			//printf("I am child and I run the alg\n");
 			exit(0);
 		}
-		
+
+		//ALARM FROM ONLINE THING
+		/*signal(SIGALRM, alarm_handler);
+		signal(SIGCHLD, child_handler);
+
+		alarm(TIME_LIMIT);
+		pause();
+		if(timeout)
+		{
+			printf("Alarm Triggered\n");
+			int result = waitpid(pid, NULL, WNOHANG);
+			if(result == 0)
+			{
+				//Child is still running so end it
+				printf("killing child\n");
+				kill(pid, SIGKILL);
+				wait(NULL);
+			}
+			else
+			{
+				printf("alarm triggered but child finished normally\n");
+			}
+		}
+		else if(child_done)
+		{
+			printf("child finished normally\n");
+			wait(NULL);
+		}*/
+
+		//BEFORE CHANGES
 		wait(NULL);
 		if(pid > 0)
 		{	
@@ -318,4 +442,14 @@ int readInFile()
 	printf("\n");
 
 	return 0;
+}
+
+void child_handler(int sig)
+{
+	child_done = 1;
+}
+
+void alarm_handler(int sig)
+{
+	timeout = 1;
 }
