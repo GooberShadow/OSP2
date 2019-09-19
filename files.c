@@ -21,13 +21,14 @@ void displaySubset(int subSet[], int size, int pidNum)
 	{
 		printf("%d ", subSet[i]);
 	}
-	printf("\n");
+	//printf("\n");
 }
 
 void subsetSum(int set[], int *subSet, int n, int subSize, int total, int nodeCount, int sum, int pidNum)
 {
 	if(total == sum)
 	{
+		printf(": ");
 		displaySubset(subSet, subSize, pidNum);
 		subsetSum(set,subSet,n,subSize-1,total-set[nodeCount],nodeCount+1,sum, pidNum);
 		return;
@@ -54,7 +55,7 @@ void findSubset(int set[], int size, int sum, int pidNum)
 	free(subSet);
 }
 
-/*bool isSubsetSum(int set[], int n, int sum)
+bool isSubsetSum(int set[], int n, int sum)
 {
 	bool subset[n + 1][sum + 1];
 
@@ -87,15 +88,15 @@ void findSubset(int set[], int size, int sum, int pidNum)
 	}
 
 	//PRINT TABLE
-	for(i = 0; i <= n; i++)
+	/*for(i = 0; i <= n; i++)
 	{
 		for(j = 0; j <= sum; j++)
 		{
 			printf("%4d", subset[i][j]);
 		}
 		printf("\n");
-	}
-*/	
+	}*/
+	
 	//RECURSIVE WAY OF DOING IT
 	/*
 	if(sum == 0)
@@ -116,8 +117,8 @@ void findSubset(int set[], int size, int sum, int pidNum)
 				isSubsetSum(set, n-1, sum-set[n-1]);
 	*/
 	
-//	return subset[n][sum];
-//}
+	return subset[n][sum];
+}
 
 void setupForIsSubsetSum(char* set, int pidNum)
 {
@@ -167,8 +168,15 @@ void setupForIsSubsetSum(char* set, int pidNum)
 		//bool flag = 0;
 		//flag = isSubsetSum(array, counter, sum);
 		
+		if(isSubsetSum(array, counter, sum))
+		{
+			findSubset(array, counter, sum, pidNum);
+		}
+		else
+		{
+			printf("No subset of numbers summed to %d ", sum);
+		}
 
-		findSubset(array, counter, sum, pidNum);
 		//ORIGINAL IDEA
 		/*if(isSubsetSum(array, counter, sum) == true)
 		{
@@ -277,7 +285,7 @@ int readInFile()
 		if(pid > 0)
 		{
 			pidNum = pid;
-			printf("%d: ", pid);
+			//printf("%d: ", pid);
 		}
 		/*if(pid > 0)
 		{
@@ -300,6 +308,12 @@ int readInFile()
 		}
 		
 		wait(NULL);
+		if(pid > 0)
+		{	
+			//printf("Parent ID: %d", getpid());
+			//pidNum = pid;
+			printf(" ::via pid:: %d \n", pid);
+		}
 	}
 	printf("\n");
 
