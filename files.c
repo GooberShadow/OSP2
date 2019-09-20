@@ -26,22 +26,26 @@ static FILE* outFile = NULL;
 
 pid_t pid = -1;
 
+//Funtion to display the answer numbers
 void displaySubset(int subSet[], int size, int pidNum)
 {
 	int i;
-	//printf("%d: ", pidNum);
 	for(i = 0; i < size; i++)
 	{
-		printf("%d ", subSet[i]);
+		outFile = fopen(getFlagArg(OUTPUT_FILE), "a");
+		fprintf(outFile, "%d ", subSet[i]);
+		fclose(outFile);
 	}
-	//printf("\n");
 }
 
+//Function that does the math to get the numbers
 void subsetSum(int set[], int *subSet, int n, int subSize, int total, int nodeCount, int sum, int pidNum)
 {
 	if(total == sum)
 	{
-		printf(": ");
+		outFile = fopen(getFlagArg(OUTPUT_FILE), "a");
+		fprintf(outFile, ": ");
+		fclose(outFile);
 		displaySubset(subSet, subSize, pidNum);
 		subsetSum(set,subSet,n,subSize-1,total-set[nodeCount],nodeCount+1,sum, pidNum);
 		return;
@@ -58,16 +62,16 @@ void subsetSum(int set[], int *subSet, int n, int subSize, int total, int nodeCo
 	}
 }
 
+//setup to do subsetSum
 void findSubset(int set[], int size, int sum, int pidNum)
 {
-	//int b=100;
 	int *subSet = NULL;
-	//int *subSet = (int*) malloc(b * sizeof(int));
 	subsetSum(set, subSet, size, 0, 0, 0, sum, pidNum);
 
 	free(subSet);
 }
 
+//Alg that checks if there is a subset and returns false if not
 bool isSubsetSum(int set[], int n, int sum)
 {
 	bool subset[n + 1][sum + 1];
@@ -100,39 +104,11 @@ bool isSubsetSum(int set[], int n, int sum)
 		}
 	}
 
-	//PRINT TABLE
-	/*for(i = 0; i <= n; i++)
-	{
-		for(j = 0; j <= sum; j++)
-		{
-			printf("%4d", subset[i][j]);
-		}
-		printf("\n");
-	}*/
-	
-	//RECURSIVE WAY OF DOING IT
-	/*
-	if(sum == 0)
-	{
-		return 1;
-	}
-	if(n == 0 && sum != 0)
-	{
-		return 0;
-	}
-
-	if(set[n-1] > sum)
-	{
-		return isSubsetSum(set, n-1, sum);
-	}
-
-	return isSubsetSum(set, n-1, sum) ||
-				isSubsetSum(set, n-1, sum-set[n-1]);
-	*/
 	
 	return subset[n][sum];
 }
 
+//Big setup to change character line into array of ints and send them to do the alg
 void setupForIsSubsetSum(char* set, int pidNum)
 {
 	char* line = NULL;
@@ -148,13 +124,10 @@ void setupForIsSubsetSum(char* set, int pidNum)
 	
 	firstWord = strtok_r (inputCopy, delimiter, &context);
 	remainder = context;
-	//printf("%s\n", firstWord);
-	//printf("%s\n", context);
 
 	int counter = 1;
 	int sum;
 	sum = atoi(firstWord);
-	//printf("SUM IS: %d\n", sum);
 		
 		//Obtain number of words in the string
 		int i;
@@ -169,7 +142,6 @@ void setupForIsSubsetSum(char* set, int pidNum)
 		char*token = strtok(context, " ");
 		while(token != NULL)
 		{
-			//printf("%s\n", token);
 			array[iterator] = atoi(token);
 			iterator++;
 			token = strtok(NULL, " ");
@@ -177,129 +149,19 @@ void setupForIsSubsetSum(char* set, int pidNum)
 
 
 		
-		//Ready for isSubsetSum function
-		//bool flag = 0;
-		//flag = isSubsetSum(array, counter, sum);
-		
+		//Ready for isSubsetSum function	
 		if(isSubsetSum(array, counter, sum))
 		{
 			findSubset(array, counter, sum, pidNum);
 		}
 		else
 		{
-			printf("No subset of numbers summed to %d ", sum);
+			outFile = fopen(getFlagArg(OUTPUT_FILE), "a");
+			fprintf(outFile, "No subset of numbers summed to %d ", sum);
+			fclose(outFile);
 		}
 
-		//ORIGINAL IDEA
-		/*if(isSubsetSum(array, counter, sum) == true)
-		{
-			printf("Found a subset with given sum\n");
-		}
-		else
-		{
-			printf("No subset with given sum\n");
-		}*/
-
-
-		/*int flag = 0;
-		flag = isSubsetSum(array, counter, sum);
-		printf("HERE IS THE FLAG: -----------------------> %d\n\n", flag);
-		*/
-		
-		//PRINT ARRAY
-		/*for(i = 0; i < counter; ++i)
-		{
-			printf("ARRAY: %d\n", array[i]);
-		}*/
-		
 	free(inputCopy);
-	//TESTING FOR LOOPS FOR TIMEOUT
-	/*for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	for(i = 0; i < 12000; ++i)
-	{
-		printf("ope\n");
-	}
-	printf("THE END\n");
-	*/
 }
 
 void kill_child(int sig)
@@ -334,7 +196,6 @@ int readInFile()
 	if(fscanf(inFile, "%d\n", &currentInt) > 0)
 	{
 		numLists = currentInt;
-		//printf("numLists = %d\n", numLists);
 	}
 	else
 	{
@@ -346,16 +207,6 @@ int readInFile()
 	size_t len = 0;
 	ssize_t read;
 
-
-	/*while((read = getline(&line, &len, inFile)) != EOF)
-	{
-		char*token = strtok(line, " ");
-		while(token != NULL)
-		{
-			printf("%s\n", token);
-			token = strtok(NULL, " ");
-		}
-	}*/
 
 	int i;
 	int pidNum;
@@ -436,7 +287,9 @@ int readInFile()
 		{	
 			//printf("Parent ID: %d", getpid());
 			//pidNum = pid;
-			printf(" ::via pid:: %d \n", pid);
+			outFile = fopen(getFlagArg(OUTPUT_FILE), "a");
+			fprintf(outFile, " ::via pid:: %d \n", pid);
+			fclose(outFile);
 		}
 	}
 	printf("\n");
