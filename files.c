@@ -172,7 +172,9 @@ void kill_child(int sig)
 int readInFile()
 {
 	inFile = fopen(getFlagArg(INPUT_FILE), "r");
-	
+	outFile = fopen(getFlagArg(OUTPUT_FILE), "w");
+	fclose(outFile);
+
 	if(inFile == NULL)
 	{
 		perror("logParse: Error: Invalid infile specified");

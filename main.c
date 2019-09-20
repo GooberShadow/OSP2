@@ -13,12 +13,20 @@ int main(int argc, char** argv)
 	
 	if(getFlagState(HELP) == 1)
 	{
-		printf("HELP\n");
+		printf("\n----HELP MESSAGE----\n\n");
+		printf("-h: Get Help Message.\n");
+		printf("-i: inputfilename\n");
+		printf("-o: outputfilename\n");
+		printf("-t: time\n");
 		return 0;
 	}
 	if(getFlagState(TIME) == 1)
 	{
-
+		//set the alarm
+		alarm(timeParam);
+		signal(SIGALRM, timeAlarm);
+		//Testing if it works
+		//sleep(100);
 	}
 	else
 	{

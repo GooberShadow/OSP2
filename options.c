@@ -8,7 +8,7 @@ static void printFlagArray();
 
 static char* inputFileParam = "input.dat";
 static char* outputFileParam = "output.dat";
-static int timeParam = 10;
+int timeParam = 10;
 
 static void initFlags()
 {

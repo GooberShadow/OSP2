@@ -20,6 +20,7 @@ enum FLAG_LABELS
 
 void setFlags(const int argc, char** argv);
 
+extern int timeParam;
 int getFlagState(int flag);
 char* getFlagArg(int flag);
 
